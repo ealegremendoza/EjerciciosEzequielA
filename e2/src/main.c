@@ -2,6 +2,7 @@
 
 int main(void)
 {
+	char *RequestMessage;
 	char *inputAmount;
 	char *inputCardNumber;
 	char *inputCardSecurityCode;
@@ -12,7 +13,6 @@ int main(void)
 	// Aquí comenzaría la apliación
 
 	inputAmount=RequestPurchaseAmount();
-	printf("> MONTO: %s\n",inputAmount);
 	inputCardNumber=RequestCardNumber();
 	if(_SUCCESS_ == verifyCardNumber(inputCardNumber))
 	{
@@ -21,12 +21,23 @@ int main(void)
 			printf("> Error. No pudo completarse la operación.\n");
 		}
 		else{ //Si entro aqui es que tengo el código de la tarjeta
-			printf("code %s\n",inputCardSecurityCode);
+			RequestMessage= SetRequestMessage(	TYPE_MSG,
+												strlen(inputCardNumber),
+												inputCardNumber,
+												inputAmount,
+												inputCardSecurityCode);
+			printf("RequestMessage: %s\n",RequestMessage);
+
+			free(RequestMessage);
 		}
 	}
+
 
 	free(inputCardSecurityCode);
 	free(inputAmount);
 	free(inputCardNumber);
+	//RequestMessage= SetRequestMessage("0200",13,"1111111112345","000000001253","179");
+	//printf("RequestMessage: %s\n",RequestMessage);
+	
 	return 0;
 }

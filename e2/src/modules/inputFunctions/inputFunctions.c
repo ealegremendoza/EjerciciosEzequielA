@@ -5,8 +5,10 @@ char* RequestPurchaseAmount(void) {
 	 char *filteredAmount;
 	 int approvedText=_ERROR_;
 	 float numberAmount=0.0;
-	 const char *padding="000000000000";
 	 int checkStatus=_ERROR_;
+	 //const char *padding="000000000000";
+	 //int padLen=0;
+	 //char ascAmount[AMOUNT_SIZE+1];
 
 	 filteredAmount=(char*)malloc(sizeof(char)*(AMOUNT_SIZE+1));
 	 
@@ -26,8 +28,10 @@ char* RequestPurchaseAmount(void) {
 	 		/*es un numero decimal positivo*/
 	 		/*convierto el numero de cadena de caracteres al formato deseado*/
 	 		numberAmount=atof(inputAmount);
-
-	 		sprintf(filteredAmount,"%.2f",numberAmount);
+			sprintf(filteredAmount,"%.2f",numberAmount);
+	 		//padLen=AMOUNT_SIZE - strlen(ascAmount);
+	 		//if(padLen < 0) padLen = 0;
+	 		//sprintf(filteredAmount,"%*.*s%s",padLen,padLen,padding,ascAmount);
 	 		approvedText=_SUCCESS_;
 	 	}
 	 	else{
@@ -89,7 +93,7 @@ char* RequestCardNumber(void){
 	 char *filteredCardNumber;
 	 int approvedText=_ERROR_;
 	 unsigned long int cardNumb=0;
-	 const char *padding="000000000000";
+	 //const char *padding="000000000000";
 	 int checkStatus=_ERROR_;
 	 int inputCardNumberLen=0;
 	 filteredCardNumber=(char*)malloc(sizeof(char)*(MAX_LEN_CARD_NUMBER+1));
@@ -100,7 +104,6 @@ char* RequestCardNumber(void){
 	 	
 	 	inputCardNumberLen=strlen(inputCardNumber);
 	 	if(inputCardNumberLen< MIN_LEN_CARD_NUMBER || inputCardNumberLen > MAX_LEN_CARD_NUMBER ){
-	 		// ERROR, Se aceptan 12 digitos como máximo.
 	 		approvedText=_ERROR_;
 	 		printf("> Error. Cantidad de digitos incorrecta.\n");
 	 		continue;
@@ -179,7 +182,7 @@ char* RequestCardSecurutyCode(void){
 	 		/*convierto el numero de cadena de caracteres al formato deseado.*/
 	 		
 	 		for(indexCardCode=0;indexCardCode<SECURITY_CODE_LEN;indexCardCode++){
-	 			rdSecurityCode[indexCardCode];
+	 			filteredSecurityCode[indexCardCode]=inputCardSecurityCode[indexCardCode];
 	 		}
 	 		filteredSecurityCode[SECURITY_CODE_LEN]='\0';
 	 		approvedText=_SUCCESS_;
@@ -196,3 +199,6 @@ char* RequestCardSecurutyCode(void){
 	 
 	 return filteredSecurityCode;
 }
+
+
+

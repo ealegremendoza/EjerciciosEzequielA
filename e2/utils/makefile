@@ -11,7 +11,8 @@ OBJS = 	../src/main.c
 HEADERS = ../src/app.h
 # funciones
 FUNCIONES= 	../src/modules/inputFunctions/inputFunctions.c \
-			../src/modules/cardFunctions/card.c
+			../src/modules/cardFunctions/card.c 	\
+			../src/modules/socketsFunctions/sockets.c
 # Flags:
 CFLAGS = -Wall -g
 

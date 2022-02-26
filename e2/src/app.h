@@ -3,3 +3,6 @@
 #include <stdlib.h>
 #include "../src/modules/inputFunctions/inputFunctions.h"
 #include "../src/modules/cardFunctions/card.h"
+#include "../src/modules/socketsFunctions/sockets.h"
+
+#define TYPE_MSG "0200"
