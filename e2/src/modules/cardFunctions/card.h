@@ -9,7 +9,7 @@ typedef struct {
 } range_t;
 
 typedef struct{
-  car label[12+1];
+  char label[12+1];
   int id;
 }card_t;
 
@@ -23,9 +23,12 @@ typedef struct{
 #define	NUM_CARD_REGS	NUM_REGS
 #define PATH_RANGES		"./ranges.dat"
 #define PATH_CARDS		"./cards.dat"
+#define INVALID_ID  (-1)
 
 int genCardsFile(const char *path);
 int genRangesFile(const char *path);
 
 int readCardsFile(const char *path);
-int readRangesFile(const char *path);
+int readRangesFile(const char *path, const char *ascNumCard);
+int IsCardCodeinRange(const char* ascCardCode, range_t range);
+int IsCardNumLenghtMatches(const char* ascCardNum, range_t range);
