@@ -1,18 +1,22 @@
 #include "inputFunctions.h"
 
 char* RequestPurchaseAmount(void) {
-	 char inputAmount[MAX_LEN_STR];
-	 char *filteredAmount;
-	 int approvedText=_ERROR_;
-	 float numberAmount=0.0;
-	 int checkStatus=_ERROR_;
-	 //const char *padding="000000000000";
-	 //int padLen=0;
-	 //char ascAmount[AMOUNT_SIZE+1];
+	char inputAmount[MAX_LEN_STR];
+	char *filteredAmount;
+	int approvedText=_ERROR_;
+	float numberAmount=0.0;
+	int checkStatus=_ERROR_;
+	//const char *padding="000000000000";
+	//int padLen=0;
+	//char ascAmount[AMOUNT_SIZE+1];
 
-	 filteredAmount=(char*)malloc(sizeof(char)*(AMOUNT_SIZE+1));
+	filteredAmount=(char*)malloc(sizeof(char)*(AMOUNT_SIZE+1));
+	if(NULL==filteredAmount){
+		printf("> Error. Memoria insuficiente para crear filteredAmount.\n");
+		return NULL;
+	}
 	 
-	 do{
+	do{
 	 	printf("> Ingrese el monto de compra:\n$");
 	 	scanf("%s",inputAmount);
 	 	if(strlen(inputAmount)>(AMOUNT_SIZE)){
@@ -41,10 +45,10 @@ char* RequestPurchaseAmount(void) {
 	 	}
 
 
-	 }while(_SUCCESS_ != approvedText);
+	}while(_SUCCESS_ != approvedText);
 
 
-	 return filteredAmount;
+	return filteredAmount;
 }
 
 
@@ -201,4 +205,28 @@ char* RequestCardSecurutyCode(void){
 }
 
 
+int GetCodeFromResponseMessage(char* ResponseMessage){
 
+	int respMsgLen=0;
+	int respMsgCode=0;
+	char ascRespMsgCode[RESPONSE_MENSSAGE_CODE_LEN+1];
+	printf("ResponseMessage: %s\n",ResponseMessage);
+	if(_ERROR_ ==IsStringOnlyNumbers(ResponseMessage)){
+		printf("> Error. El mensaje de respuesta solo puede contener numeros.\n");
+		return -1;
+	}
+	respMsgLen=strlen(ResponseMessage);
+
+	if(RESPONSE_MENSSAGE_LEN !=respMsgLen){
+		printf("> Error. El mensaje de respuesta solo puede contener 4 digito.\n");
+		return -1;
+	}
+
+	ascRespMsgCode[0]=ResponseMessage[4];
+	ascRespMsgCode[1]=ResponseMessage[5];
+	ascRespMsgCode[2]='\0';
+
+	respMsgCode=atoi(ascRespMsgCode);
+	printf("codigo: %d\n",respMsgCode);
+	return respMsgCode;
+}

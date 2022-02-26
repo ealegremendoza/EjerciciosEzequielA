@@ -14,6 +14,7 @@ char* SetRequestMessage(char* typeMsg, int cardNumLen, char* cardNum, char* amou
 		return (char*)NULL;
 	}
 
+
 	AmountPadded=StringPadding(amount,'0',TARGET_LEN);
 
 
@@ -83,4 +84,120 @@ char* StringPadding(char *strOrig, char ch2pad, int padlen){
   	free(padding);
 	return outStringPadded;
 
+}
+
+/**
+* Crea un socket
+* @return handle del socket o -1 en caso de error
+*/
+int socketCreate(){
+	return _SOCKET_SUCCESS_;
+}
+
+/**
+* Conectar el socket a un host
+* @param handle handle del socket a utilizar
+* @param ip direccion ip del host a conectarse
+* @param port puerto del host a conectarse
+* @return handle del socket o -1 en caso de error
+*/
+int socketConnect(int handle, const char *ip, unsigned short port){
+	return _SOCKET_SUCCESS_;
+}
+
+/**
+* Leer datos del socket. La función bloquea hasta leer datos o transcurrir maxTimeout milisegundos
+* @param handle handle del socket a utilizar
+* @param data puntero donde se guardarán los datos leidos
+* @param maxTimeout tiempo máximo de espera en milisegundos
+* @return cantidad de bytes leidos o -1 en caso de error
+*/
+int socketRead(int handle, unsigned char *data, int maxTimeout){
+#if TESTING == REJECT
+	strcpy(data,"021002");
+#elif TESTING == VALIDATE
+	strcpy(data,"021000");
+#else
+	printf("Error.\n");
+#endif
+	printf("read data:%s\n",data);
+	return strlen(data);
+}
+
+/**
+* Escribir datos en un socket.
+* @param handle handle del socket a utilizar
+* @param data puntero donde se leerán los datos a escribir
+* @return cantidad de bytes escritos o -1 en caso de error
+*/
+int socketWrite(int handle, const unsigned char *data){
+	return _SOCKET_SUCCESS_;
+}
+
+/**
+* Cierra el socket y libera recursos.
+* @param handle handle del socket a utilizar
+* @return 0 en caso de exito o -1 en caso de error
+*/
+int socketClose(int handle){
+	return _SOCKET_SUCCESS_;
+}
+
+
+
+int ValidateCard(const char *ip, unsigned short port,char* typeMsg, int cardNumLen,
+				 char* cardNum, char* amount, char *code,int maxResponseTimeout){
+	
+	char *RequestMessage;
+	char ResponseMessage[6+1];
+	int sockfd;
+	int connectionStatus=_SOCKET_SUCCESS_;
+
+	RequestMessage= SetRequestMessage(	typeMsg,
+										cardNumLen,
+										cardNum,
+										amount,
+										code);
+	if(NULL==RequestMessage){
+		printf("> Error. No pudo completarse la operación.\n");
+		return _SOCKET_ERROR_;
+	}
+
+	printf("RequestMessage: %s\n",RequestMessage);
+
+
+	/*ACA LLAMAR A SOCKET*/
+
+	sockfd=socketCreate();
+	if(_SOCKET_SUCCESS_ ==sockfd){
+
+		if(_SOCKET_SUCCESS_==socketConnect(sockfd,ip,port)){
+			if(_SOCKET_ERROR_ != socketWrite(sockfd,RequestMessage)){
+				if(_SOCKET_ERROR_ !=socketRead(sockfd, ResponseMessage, maxResponseTimeout )) {
+					if(VALID_CODE==GetCodeFromResponseMessage(ResponseMessage)){
+						printf("APROBADA\n");
+					}
+					else
+						printf("RECHADAZA\n");
+
+				}
+				else
+					connectionStatus=_SOCKET_ERROR_;
+			}
+			else
+				connectionStatus=_SOCKET_ERROR_;
+
+		}
+		else
+			connectionStatus=_SOCKET_ERROR_;
+
+	}
+	else
+		connectionStatus=_SOCKET_ERROR_;
+
+	if(_SOCKET_ERROR_==connectionStatus)
+		printf("ERROR EN LA COMUNICACION\n");
+
+	free(RequestMessage);
+	return connectionStatus;
 }
