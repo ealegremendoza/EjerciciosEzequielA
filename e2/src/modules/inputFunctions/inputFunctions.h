@@ -11,14 +11,14 @@
 #define MAX_LEN_CARD_NUMBER	20
 
 #define SECURITY_CODE_LEN	3
-#define RESPONSE_MENSSAGE_LEN	6
-#define RESPONSE_MENSSAGE_CODE_LEN	2
 
-#define VALID_CODE 0
+
+
+
 
 int IsAPositiveDecimalNumber(char *inputString);
 char* RequestPurchaseAmount(void);
 char* RequestCardNumber(void);
 char IsStringOnlyNumbers(char *str);
 char* RequestCardSecurutyCode(void);
-int GetCodeFromResponseMessage(char* ResponseMessage);
+

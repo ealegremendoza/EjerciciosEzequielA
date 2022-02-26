@@ -5,4 +5,6 @@
 #include "../src/modules/cardFunctions/card.h"
 #include "../src/modules/socketsFunctions/sockets.h"
 
-#define TYPE_MSG "0200"
+#define TYPE_MSG 				"0200"
+#define SOCKET_IP_LOCAL_HOST	"127.0.0.1"
+#define SOCKET_PORT				3490  

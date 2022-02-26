@@ -113,15 +113,20 @@ int socketConnect(int handle, const char *ip, unsigned short port){
 * @return cantidad de bytes leidos o -1 en caso de error
 */
 int socketRead(int handle, unsigned char *data, int maxTimeout){
-#if TESTING == REJECT
+#if TESTING_SOCKET_READ == REJECT
 	strcpy(data,"021002");
-#elif TESTING == VALIDATE
+#elif TESTING_SOCKET_READ == VALIDATE
 	strcpy(data,"021000");
 #else
 	printf("Error.\n");
 #endif
 	printf("read data:%s\n",data);
+
+#if TESTING_SOCKET_TIMEOUT == CONNECTION_ERROR
+	return _SOCKET_ERROR_;
+#else
 	return strlen(data);
+#endif
 }
 
 /**
@@ -200,4 +205,32 @@ int ValidateCard(const char *ip, unsigned short port,char* typeMsg, int cardNumL
 
 	free(RequestMessage);
 	return connectionStatus;
+}
+
+
+
+int GetCodeFromResponseMessage(char* ResponseMessage){
+
+	int respMsgLen=0;
+	int respMsgCode=0;
+	char ascRespMsgCode[RESPONSE_MENSSAGE_CODE_LEN+1];
+	printf("ResponseMessage: %s\n",ResponseMessage);
+	if(_ERROR_ ==IsStringOnlyNumbers(ResponseMessage)){
+		printf("> Error. El mensaje de respuesta solo puede contener numeros.\n");
+		return -1;
+	}
+	respMsgLen=strlen(ResponseMessage);
+
+	if(RESPONSE_MENSSAGE_LEN !=respMsgLen){
+		printf("> Error. El mensaje de respuesta solo puede contener 4 digito.\n");
+		return -1;
+	}
+
+	ascRespMsgCode[0]=ResponseMessage[4];
+	ascRespMsgCode[1]=ResponseMessage[5];
+	ascRespMsgCode[2]='\0';
+
+	respMsgCode=atoi(ascRespMsgCode);
+	printf("codigo: %d\n",respMsgCode);
+	return respMsgCode;
 }
