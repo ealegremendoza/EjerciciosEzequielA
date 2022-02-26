@@ -106,7 +106,7 @@ char* RequestCardNumber(void){
 	 		continue;
 	 	}
 	 	/*no permito que ponga el caracter pesos*/
-	 	checkStatus=allNumbers(inputCardNumber);
+	 	checkStatus=IsStringOnlyNumbers(inputCardNumber);
 		
 	 	if(_SUCCESS_== checkStatus){
 	 		/*es un numero entero positivo*/
@@ -131,7 +131,7 @@ char* RequestCardNumber(void){
 	@param str, en este puntero la cadena de caracteres.
 	@return  __TRUE__ (1) por exito, __FALSE__(0) por error.
 */
-char allNumbers(char *str){
+char IsStringOnlyNumbers(char *str){
 	int count=0;
 	int i;
 	for(i=0;i<strlen(str);i++){
@@ -139,4 +139,60 @@ char allNumbers(char *str){
 			count++;
 	}	
 	return  (count==strlen(str)) ? _SUCCESS_:_ERROR_;
+}
+
+
+char* RequestCardSecurutyCode(void){
+
+	 char inputCardSecurityCode[MAX_LEN_STR];
+	 char *filteredSecurityCode;
+	 int approvedText=_ERROR_;
+	 int cardCode=0;
+	 int checkStatus=_ERROR_;
+	 int inputCardSecurityCodeLen=0;
+	 int indexCardCode=0;
+
+
+	 filteredSecurityCode=(char*)malloc(sizeof(char)*(SECURITY_CODE_LEN+1));
+	 if(NULL==inputCardSecurityCode){
+	 	printf("Error. No pudo solicitarse memoria para char* inputCardSecurityCode.\n\n");
+	 	return NULL;
+	 }
+	 
+	 do{
+	 	printf("> Ingrese el código de seguridad de la tarjeta:\n");
+	 	scanf("%s",inputCardSecurityCode);
+	 	
+	 	inputCardSecurityCodeLen=strlen(inputCardSecurityCode);
+	 	if(inputCardSecurityCodeLen!= SECURITY_CODE_LEN ){
+	 		// ERROR, Se aceptan 3 digitos solamente.
+	 		approvedText=_ERROR_;
+	 		printf("> Error. Cantidad de digitos incorrecta.\n\n");
+	 		continue;
+	 	}
+
+	
+	 	checkStatus=IsStringOnlyNumbers(inputCardSecurityCode);
+		
+	 	if(_SUCCESS_== checkStatus){
+	 		/*es un numero entero positivo*/
+	 		/*convierto el numero de cadena de caracteres al formato deseado.*/
+	 		
+	 		for(indexCardCode=0;indexCardCode<SECURITY_CODE_LEN;indexCardCode++){
+	 			rdSecurityCode[indexCardCode];
+	 		}
+	 		filteredSecurityCode[SECURITY_CODE_LEN]='\0';
+	 		approvedText=_SUCCESS_;
+	 	}
+	 	else{
+	 		/* no es un numero*/
+	 		approvedText=_ERROR_;
+	 		printf("> Error. Ingrese sólo números enteros positivos.\n\n");
+	 	}
+
+
+	 }while(_SUCCESS_ != approvedText);
+
+	 
+	 return filteredSecurityCode;
 }
