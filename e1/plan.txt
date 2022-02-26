@@ -1,0 +1,23 @@
+- El usuario debe ingresar indeterminada cantidad de numeros enteros hasta que se ingrese el 0.
+	Hacer una función que reciba datos hasta que se ingrese uno determinado que corte el ingreso.
+
+- Luego de que finalice el ingreso de datos se debe crear el archivo.
+	Se solicita al usuario ingresar el nombre del archivo. El mismo será un txt.
+	Acá me conviene crear un archivo temporal y renombrarlo. Es más sencillo y rápido. 
+	El usuario no tiene por qué enterarse.
+
+
+	La función que cargue los numeros deberia ser parecida a la que sigue:
+
+	/*brief: La función solicita al usuario una indeterminada cantidad de números enteros.
+	@param stopChar, este es el caracter que dará finalización a la carga de números.
+	@param inputMsg, mensaje personalizado para solicitar que ingresen datos.
+	@return  tamaño del vector de numeros enteros. Retorna -1 en caso de error. 
+	*/
+	int inputNumbers(char* inputMsg, char stopChar);
+
+
+
+
+
+	
