@@ -1,5 +1,10 @@
 #include "card.h"
-
+/**
+* Genera el archivo binario correspondiente a los rangos en
+* que pueden encontrarse los primeros 8 dígitos de la tarjeta. 
+* @param puntero a la ruta y nombre del archivo que quiere crearse.
+* @return 0 por error, 1 por exito.
+*/
 int genRangesFile(const char *path){
 	/*	Archivo binario creado
 		RangeLow 	RangeHigh 	len id
@@ -30,7 +35,7 @@ int genRangesFile(const char *path){
 	fp=fopen(PATH_RANGES,"wb");
 	if(NULL==fp){
 		printf("Error. No se pudo crear el archivo.\n");
-		fileGenStatus=_ERROR_;
+		return _ERROR_;
 	}
 
 	fileGenStatus=_SUCCESS_;
@@ -47,7 +52,7 @@ int genRangesFile(const char *path){
 		range.rangeHigh[1]=index+1+'0';
 		range.rangeHigh[2]=index+1+'0';
 		range.rangeHigh[3]=index+1+'0';
-		fwrite(range.rangeHigh, sizeof(char), strlen(range.rangeLow)+1, fp);
+		fwrite(range.rangeHigh, sizeof(char), strlen(range.rangeHigh)+1, fp);
 		
 		fwrite(&range.len,sizeof(unsigned char),1,fp);
 		
@@ -60,6 +65,12 @@ int genRangesFile(const char *path){
 	return fileGenStatus;
 }
 
+/**
+* Genera el archivo binario correspondiente a la información de las
+* tarjetas. 
+* @param puntero a la ruta y nombre del archivo que quiere crearse.
+* @return 0 por error, 1 por exito.
+*/
 int genCardsFile(const char *path){
 	/*	Archivo binario creado
 		(label) 		(id)
@@ -77,7 +88,7 @@ int genCardsFile(const char *path){
 	fp=fopen(PATH_CARDS,"wb");
 	if(NULL==fp){
 		printf("Error. No se pudo crear el archivo.\n");
-		fileGenStatus=_ERROR_;
+		return _ERROR_;
 	}
 
 	fileGenStatus=_SUCCESS_;
@@ -98,6 +109,13 @@ int genCardsFile(const char *path){
 	return fileGenStatus;
 }
 
+
+/**
+* Busca en el archivo de registros de rangos el ID de la tarjeta.
+* @param path puntero a la ruta y nombre del archivo que quiere leerse.
+* @param ascCardNum puntero al numero de la tarjeta leida.
+* @return 0 por error, 1 por exito.
+*/
 int readRangesFile(const char *path, const char *ascCardNum){
 	range_t range;
 	FILE *fp;
@@ -123,9 +141,9 @@ int readRangesFile(const char *path, const char *ascCardNum){
 		fread(&range.len, sizeof(unsigned char),1, fp);
 		fread(&range.id, sizeof(int),1, fp);
 		
-		if(IsCardCodeinRange(ascCardCode,range)){
+		if(IsCardCodeinRange(ascCardCode,&range)){
 			//estoy en rango
-			if(IsCardNumLenghtMatches(ascCardNum,range)){
+			if(IsCardNumLenghtMatches(ascCardNum,&range)){
 				// encontré el registro, retornar id
 				fclose(fp);
 				return range.id;
@@ -138,23 +156,38 @@ int readRangesFile(const char *path, const char *ascCardNum){
 	return INVALID_ID;
 }
 
-int IsCardCodeinRange(const char* ascCardCode, range_t range){
+
+
+int IsCardCodeinRange(const char* ascCardCode, range_t *range){
 	int inputCardCode=0;
 	int inputRangeLow=0;
 	int inputRangeHigh=0;
 
 	inputCardCode=atoi(ascCardCode);
-	inputRangeLow=atoi(range.rangeLow);
-	inputRangeHigh=atoi(range.rangeHigh);
+	inputRangeLow=atoi(range->rangeLow);
+	inputRangeHigh=atoi(range->rangeHigh);
 
 	return  ((inputCardCode>=inputRangeLow)&&(inputCardCode<=inputRangeHigh)) ? _SUCCESS_:_ERROR_;
 }
 
-
-int IsCardNumLenghtMatches(const char* ascCardNum, range_t range){
-	return (strlen(ascCardNum)==range.len)? _SUCCESS_:_ERROR_;
+/**
+* Verifica si el largo del numero de la tarjeta leida coincide con la longitud
+* guardada en alguno de los registros.
+* @param ascCardNum, puntero al número de la tarjeta leida.
+* @param range, puntero a la estructura que contiene la información en range.len
+* @return 0 por error, 1 por exito.
+*/
+int IsCardNumLenghtMatches(const char* ascCardNum, range_t *range){
+	return (strlen(ascCardNum)==range->len)? _SUCCESS_:_ERROR_;
 }
 
+/**
+* Busca en el archivo de registros de tarjetas la tarjeta correcta
+* mediante su ID. Imprime el label de la tarjeta.
+* @param path puntero a la ruta y nombre del archivo que quiere leerse.
+* @param cardId numero de identificacion de la tarjeta.
+* @return 0 por error, 1 por exito.
+*/
 int readCardsFile(const char *path, const int cardId){
 	card_t card;
 	FILE *fp;
@@ -168,7 +201,7 @@ int readCardsFile(const char *path, const int cardId){
 	while(!feof(fp)){
 		fread(card.label, sizeof(char),LABEL_LENG+1, fp);
 		fread(&card.id, sizeof(int),1, fp);
-		if(CardIdMatches(cardId,card)){
+		if(CardIdMatches(cardId,&card)){
 			// Encontré la tarjeta!
 			printf("> %s\n",card.label);
 			fclose(fp);
@@ -181,10 +214,23 @@ int readCardsFile(const char *path, const int cardId){
 	return _ERROR_;
 }
 
-int CardIdMatches(int cardId,card_t card){
-	return (cardId==card.id)?_SUCCESS_:_ERROR_;
+/**
+* Verifica si el ID de la tarjeta coincide con alguno de los ID guardados
+* en los registros.
+* @param cardId, número de identificación de la tarjeta leida.
+* @param card, puntero a la estructura que contiene la información en id
+* @return 0 por error, 1 por exito.
+*/
+int CardIdMatches(int cardId,card_t *card){
+	return (cardId==card->id)?_SUCCESS_:_ERROR_;
 }
 
+/**
+* Verifica si el numero de la tarjeta leida se encuentra en los 
+* registros del sistema.
+* @param ascCardNum puntero al numero de la tarjeta leida.
+* @return 0 por error, 1 por exito.
+*/
 int verifyCardNumber (const char* ascCardNum){
 	int cardId=INVALID_ID;
 	cardId=readRangesFile(PATH_RANGES,ascCardNum);
@@ -207,6 +253,7 @@ int verifyCardNumber (const char* ascCardNum){
 	}
 	return _SUCCESS_;
 }
+
 
 int genCardsRegs(void)
 {

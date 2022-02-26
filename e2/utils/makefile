@@ -1,7 +1,7 @@
 #-----------------------------------------------------------------------
 # Solo modificar las siguientes variables
 # El nombre del programa:
-BINARY = e1
+BINARY = e2
 # Nombre de los archivos pero modificando a .o:
 OBJS = 	../src/main.c 
 		
@@ -37,7 +37,7 @@ all:
 compile: $(OBJS)
 	@echo ' '
 	@echo 'Compilando todos los objetos...'
-	$(CC) $(FUNCIONES) -o $(BINARY) $(OBJS) $(LDFLAGS)  
+	$(CC) $(FUNCIONES) -o ../bin/$(BINARY) $(OBJS) $(LDFLAGS)  
 	@echo 'Fin de la compilacion.'
 	@echo ' '
 	@echo 'Eliminando todos los archivos objeto...'
@@ -54,7 +54,7 @@ compile: $(OBJS)
 	@echo 'Listo.'
 
 execute:
-	./$(BINARY)
+	../bin/$(BINARY)
 
 # Esta regla borra el binario creado.
 clean:

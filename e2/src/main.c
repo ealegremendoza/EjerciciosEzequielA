@@ -29,7 +29,7 @@ int main(void)
 			printf("> Error. No pudo completarse la operación.\n");
 		}
 		else{ //Si entro aqui es que tengo el código de la tarjeta **
-			ValidateCard(	SOCKET_IP_LOCAL_HOST,
+			ValidateTransaction(	SOCKET_IP_LOCAL_HOST,
 										SOCKET_PORT,
 										TYPE_MSG,
 										strlen(inputCardNumber),

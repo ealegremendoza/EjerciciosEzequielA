@@ -52,7 +52,7 @@ void DeleteCharOnString(char* str, char char2del){
 
 	for(indexOrig=0;indexOrig<lenstr;indexOrig++){
 		if(strAuxOrig[indexOrig]==char2del){
-			//indexDest-=1;
+			//de esta forma no copio el caracter
 		}
 		else{
 			strAuxDest[indexDest]=strAuxOrig[indexOrig];
@@ -118,9 +118,9 @@ int socketRead(int handle, unsigned char *data, int maxTimeout){
 #elif TESTING_SOCKET_READ == VALIDATE
 	strcpy(data,"021000");
 #else
-	printf("Error.\n");
+	//printf("Error.\n");
 #endif
-	printf("read data:%s\n",data);
+	//printf("read data:%s\n",data);
 
 #if TESTING_SOCKET_TIMEOUT == CONNECTION_ERROR
 	return _SOCKET_ERROR_;
@@ -150,7 +150,7 @@ int socketClose(int handle){
 
 
 
-int ValidateCard(const char *ip, unsigned short port,char* typeMsg, int cardNumLen,
+int ValidateTransaction(const char *ip, unsigned short port,char* typeMsg, int cardNumLen,
 				 char* cardNum, char* amount, char *code,int maxResponseTimeout){
 	
 	char *RequestMessage;
@@ -168,7 +168,7 @@ int ValidateCard(const char *ip, unsigned short port,char* typeMsg, int cardNumL
 		return _SOCKET_ERROR_;
 	}
 
-	printf("RequestMessage: %s\n",RequestMessage);
+	//printf("RequestMessage: %s\n",RequestMessage);
 
 
 	/*ACA LLAMAR A SOCKET*/
@@ -214,16 +214,16 @@ int GetCodeFromResponseMessage(char* ResponseMessage){
 	int respMsgLen=0;
 	int respMsgCode=0;
 	char ascRespMsgCode[RESPONSE_MENSSAGE_CODE_LEN+1];
-	printf("ResponseMessage: %s\n",ResponseMessage);
+	//printf("ResponseMessage: %s\n",ResponseMessage);
 	if(_ERROR_ ==IsStringOnlyNumbers(ResponseMessage)){
 		printf("> Error. El mensaje de respuesta solo puede contener numeros.\n");
-		return -1;
+		return _SOCKET_ERROR_;
 	}
 	respMsgLen=strlen(ResponseMessage);
 
 	if(RESPONSE_MENSSAGE_LEN !=respMsgLen){
 		printf("> Error. El mensaje de respuesta solo puede contener 4 digito.\n");
-		return -1;
+		return _SOCKET_ERROR_;
 	}
 
 	ascRespMsgCode[0]=ResponseMessage[4];
@@ -231,6 +231,6 @@ int GetCodeFromResponseMessage(char* ResponseMessage){
 	ascRespMsgCode[2]='\0';
 
 	respMsgCode=atoi(ascRespMsgCode);
-	printf("codigo: %d\n",respMsgCode);
+	//printf("codigo: %d\n",respMsgCode);
 	return respMsgCode;
 }

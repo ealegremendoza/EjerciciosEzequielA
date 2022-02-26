@@ -1,14 +1,13 @@
 #include "inputFunctions.h"
 
+
 char* RequestPurchaseAmount(void) {
 	char inputAmount[MAX_LEN_STR];
 	char *filteredAmount;
 	int approvedText=_ERROR_;
 	float numberAmount=0.0;
 	int checkStatus=_ERROR_;
-	//const char *padding="000000000000";
-	//int padLen=0;
-	//char ascAmount[AMOUNT_SIZE+1];
+
 
 	filteredAmount=(char*)malloc(sizeof(char)*(AMOUNT_SIZE+1));
 	if(NULL==filteredAmount){
@@ -33,9 +32,7 @@ char* RequestPurchaseAmount(void) {
 	 		/*convierto el numero de cadena de caracteres al formato deseado*/
 	 		numberAmount=atof(inputAmount);
 			sprintf(filteredAmount,"%.2f",numberAmount);
-	 		//padLen=AMOUNT_SIZE - strlen(ascAmount);
-	 		//if(padLen < 0) padLen = 0;
-	 		//sprintf(filteredAmount,"%*.*s%s",padLen,padLen,padding,ascAmount);
+	 		
 	 		approvedText=_SUCCESS_;
 	 	}
 	 	else{
@@ -51,11 +48,6 @@ char* RequestPurchaseAmount(void) {
 	return filteredAmount;
 }
 
-
-/*	brief: Verifica si todos los caracteres de la cadena corresponden a números decimales positivos 
-	@param str, en este puntero la cadena de caracteres.
-	@return  __TRUE__ (1) por exito, __FALSE__(0) por error.
-*/
 int IsAPositiveDecimalNumber(char *inputString){
 	int count=0;
 	int index;
@@ -109,7 +101,8 @@ char* RequestCardNumber(void){
 	 	inputCardNumberLen=strlen(inputCardNumber);
 	 	if(inputCardNumberLen< MIN_LEN_CARD_NUMBER || inputCardNumberLen > MAX_LEN_CARD_NUMBER ){
 	 		approvedText=_ERROR_;
-	 		printf("> Error. Cantidad de digitos incorrecta.\n");
+	 		printf("> Error. Ingrese solamente números enteros positivos.\n");
+	 		printf("> Solamente podrá ingresar entre %d y %d dígitos.\n\n",MIN_LEN_CARD_NUMBER,MAX_LEN_CARD_NUMBER);
 	 		continue;
 	 	}
 	 	/*no permito que ponga el caracter pesos*/
@@ -134,10 +127,7 @@ char* RequestCardNumber(void){
 	 return filteredCardNumber;
 }
 
-/*	brief: Verifica si todos los caracteres de la cadena corresponden a números. 
-	@param str, en este puntero la cadena de caracteres.
-	@return  __TRUE__ (1) por exito, __FALSE__(0) por error.
-*/
+
 char IsStringOnlyNumbers(char *str){
 	int count=0;
 	int i;
@@ -148,7 +138,11 @@ char IsStringOnlyNumbers(char *str){
 	return  (count==strlen(str)) ? _SUCCESS_:_ERROR_;
 }
 
-
+/**
+* Solicita al usuario ingresar el codigo de seguridad de la tarjeta.
+* @return puntero a una cadena con el codigo de seguridad de la tarjeta filtrado.
+* @note retorna memoria dinámica. Debe liberarla luego de su uso.
+*/
 char* RequestCardSecurutyCode(void){
 
 	 char inputCardSecurityCode[MAX_LEN_STR];
@@ -174,7 +168,8 @@ char* RequestCardSecurutyCode(void){
 	 	if(inputCardSecurityCodeLen!= SECURITY_CODE_LEN ){
 	 		// ERROR, Se aceptan 3 digitos solamente.
 	 		approvedText=_ERROR_;
-	 		printf("> Error. Cantidad de digitos incorrecta.\n\n");
+	 		printf("> Error. Ingrese solamente números enteros positivos.\n");
+	 		printf("> Debe ingresar %d dígitos.\n\n",SECURITY_CODE_LEN);
 	 		continue;
 	 	}
 

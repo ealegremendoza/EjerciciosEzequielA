@@ -1,0 +1,32 @@
+1-solicitar monto de compra:
+    12 digitos, sin separador decimal, rellenar.
+    ejemplo: $25,34 ---> "000000002534"
+    El usuario sólo va a ingresar números y hata un punto decimal. La coma no está permitida.
+    Puedo hacer lo siguiente:
+    Ingresa el monto, si esta bien, relleno y salgo. Si esta mal la sintaxis pediré que repita la operación.
+    Voy a dejar que el modificador de printf redondee el número.
+    Si solo ingresa un .? Debe leerse como 0.00 y dar 000000000000
+    
+2-solicitar numero de tarjeta
+    Son solo enteros positivos
+    verificar que cumpla con los limitas min y max del longitud que se pide.
+    
+3-verificar n° de tarjeta. Debe corresponder a tarjeta válida
+    primero debo crar los registros y cargarlos con algunos ejemplos.
+    leer uno por uno los registros de ranges.dat con while(!feof(filepointe)){}
+    leer el archivo cards.dat de la misma manera 
+    Necesito hacer una funcion que verifique de la manera que piden. No puedo ponerlo en el main.
+
+4-solicitar codigo de segurdad de la tarjeta
+    similar al punto 2. solo que soporta 3 digitos como máximo.
+    
+5.a-armar RequestMensage
+5.b y 6-Entiendo que el ununciado pide que use directamente los prototipos de las funciones de socket, no que las arme.
+    Aun asi para probar el código debo simular con macros y directivas su comportamiento.
+
+
+
+
+
+
+	
